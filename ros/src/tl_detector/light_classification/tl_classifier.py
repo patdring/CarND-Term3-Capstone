@@ -19,7 +19,7 @@ import time
 import cv2
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
-PATH_TO_CKPT = 'model/frozen_inference_graph.pb'
+PATH_TO_CKPT = r'light_classification/model/frozen_inference_graph.pb'
 
 # number of classes for my dataset
 NUM_CLASSES = 4
@@ -64,11 +64,11 @@ class TLClassifier(object):
                 detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
                 num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
-                image_np = load_image_into_numpy_array(image)
-                image_expanded = np.expand_dims(image_np, axis=0)
+                #image_np = self.load_image_into_numpy_array(image)
+                image_expanded = np.expand_dims(image, axis=0)
                 
                 (boxes, scores, classes, num) = sess.run(
-                    [detect_boxes, detect_scores, detect_classes, num_detections],
+                    [detection_boxes, detection_scores, detection_classes, num_detections],
                     feed_dict={image_tensor: image_expanded})
                               
                 if (scores[0][0] >= 0.5):
