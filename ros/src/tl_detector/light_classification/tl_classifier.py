@@ -70,8 +70,8 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        #image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        image_np = np.expand_dims(image, axis=0)
+        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image_np = np.expand_dims(image_rgb, axis=0)
 
         with self.detection_graph.as_default():
             (boxes, scores, classes, num) = self.sess.run(

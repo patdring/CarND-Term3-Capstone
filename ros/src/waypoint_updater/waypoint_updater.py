@@ -24,7 +24,7 @@ as well as to verify your TL classifier.
 TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
-LOOKAHEAD_WPS = 30  # Number of waypoints we will publish.
+LOOKAHEAD_WPS = 70  # Number of waypoints we will publish.
 
 class WaypointUpdater(object):
     def __init__(self):
@@ -37,16 +37,16 @@ class WaypointUpdater(object):
         self.waypoint_tree = None
         self.decelerate_count = 0
 
-        rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb, queue_size=4)
-        rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb, queue_size=16)
+        rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
+        rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
-        self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=4)
+        self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
 
         self.loop()
 
     def loop(self):
-        rate = rospy.Rate(10)
+        rate = rospy.Rate(5)
         while not rospy.is_shutdown():
             if self.pose and self.base_lane:
                 self.publish_waypoints()
@@ -99,7 +99,7 @@ class WaypointUpdater(object):
 
             stop_idx = max(self.stopline_wp_idx - closest_idx - 4, 0)
             dist = self.distance(waypoints, i, stop_idx)
-            vel = math.sqrt(2 * 0.5 * dist) + (i * (1 / LOOKAHEAD_WPS))
+            vel = math.sqrt(2 * 1 * dist) #+ (i * (1 / LOOKAHEAD_WPS))
             if vel < 1.0:
                 vel = 0.0
 
