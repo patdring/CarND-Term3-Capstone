@@ -46,7 +46,7 @@ class WaypointUpdater(object):
         self.loop()
 
     def loop(self):
-        rate = rospy.Rate(5)
+        rate = rospy.Rate(2)
         while not rospy.is_shutdown():
             if self.pose and self.base_lane:
                 self.publish_waypoints()
@@ -119,7 +119,7 @@ class WaypointUpdater(object):
 
     def traffic_cb(self, msg):
         if self.stopline_wp_idx != msg.data:
-            #rospy.logwarn("LIGHT: new stopline_wp_idx={}, old stopline_wp_idx={}".format(msg.data, self.stopline_wp_idx))
+            rospy.logwarn("[NEW] stopline_wp_idx={} [OLD] stopline_wp_idx={}".format(msg.data, self.stopline_wp_idx))
             self.stopline_wp_idx = msg.data
 
     def obstacle_cb(self, msg):

@@ -37,6 +37,10 @@ class TLClassifier(object):
             od_graph_def.ParseFromString(serialized_graph)
             tf.import_graph_def(od_graph_def, name='')
 
+        #self.category_index = {1: {'id': 1, 'name': 'Red'}, 
+        #                       2: {'id': 2, 'name': 'Yellow'},
+        #                       3: {'id': 3, 'name': 'Green'}, 
+        #                       4: {'id': 4, 'name': 'off'}}
         self.category_index = {1: {'id': 1, 'name': 'Red'}, 
                                2: {'id': 2, 'name': 'Yellow'},
                                3: {'id': 3, 'name': 'Green'}, 
@@ -70,8 +74,10 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image_res = cv2.resize(image, None, fx=0.25, fy=0.25)
+        image_rgb = cv2.cvtColor(image_res, cv2.COLOR_BGR2RGB)       
         image_np = np.expand_dims(image_rgb, axis=0)
+        
 
         with self.detection_graph.as_default():
             (boxes, scores, classes, num) = self.sess.run(
@@ -83,20 +89,19 @@ class TLClassifier(object):
         scores = np.squeeze(scores)
         classes = np.squeeze(classes).astype(np.int32)
 
-        red_cnt = 0
-        detect_cnt = 0
+        print('scores: ', scores[0])
+        print('classes: ', classes[0])
+        print('boxes: ', boxes[0])
 
-        for i in range(boxes.shape[0]):
-            if scores is None or scores[i] > 0.6:            
-                class_name = self.category_index[classes[i]]['name']
-                detect_cnt += 1
-                # Traffic light thing
-                if class_name == 'Red':
-                    red_cnt += 1
+        if scores[0] > 0.5:
+            if classes[0] == 1:
+                print('red')
+                return TrafficLight.RED
+            elif classes[0] == 2:
+                print('yellow')
+                return TrafficLight.YELLOW
+            elif classes[0] == 3:
+                print('green')
+                return TrafficLight.GREEN
 
-        if  detect_cnt - red_cnt > red_cnt:
-            self.current_light = TrafficLight.GREEN
-        else:
-            self.current_light = TrafficLight.RED
-
-        return self.current_light
+        return TrafficLight.UNKNOWN
