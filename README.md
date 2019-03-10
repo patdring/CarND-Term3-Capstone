@@ -75,7 +75,7 @@ b) Create a **TFRecord **file to retrain a TensorFlow model. A TFRecord is a bin
 
 c) Choose a model and configure it. I choose a SSD Inception V2 mode trained against Coco dataset. From TensoFlows repo. you have to copy the according config file. And adjust there some paths and of epochs. The example there uses 200.000 epochs to retrain a network to detect pets. Way too much in my opionion. The simulator generates "perfect" and not so different images. I was statisfied with the already after ~1500 epochs. It's also important to keep in mind to keep your model (file) small.
 
-d) Train and freeze your model. Include it in your project like I did [here(https://github.com/patdring/CarND-Term3-Capstone/blob/master/ros/src/tl_detector/light_classification/tl_classifier.py).
+d) Train and freeze your model. Include it in your project like I did [here](https://github.com/patdring/CarND-Term3-Capstone/blob/master/ros/src/tl_detector/light_classification/tl_classifier.py).
 
 ![](imgs/tl-detector-ros-graph.png)
 *(Image Source: Udacity)*
